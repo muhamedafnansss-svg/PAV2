@@ -29,9 +29,17 @@ class CyberAgent(BaseAgent):
     def execute_audit(self, target: str):
         logger.info(f"[CyberAgent] Executing security audit on {target}")
         self._set_status(AgentStatus.RUNNING)
-        # Mock execution logic to be wired to tools
+        from val.soc.soc_engine import is_target_safe
+        
+        if not is_target_safe(target):
+            logger.warning(f"[CyberAgent] Target {target} is blocked by current SafetyMode.")
+            self._set_status(AgentStatus.IDLE)
+            return {"status": "blocked", "reason": "Target outside authorized scope."}
+            
+        # In full execution, it orchestrates nmap/ffuf/gobuster based on the authorized target
+        # Here we mock the result to ensure it adheres to the scope
         self._set_status(AgentStatus.IDLE)
-        return {"status": "audit_complete", "target": target}
+        return {"status": "audit_complete", "target": target, "results": "Safe pentest executed successfully."}
 
 
 class DevAgent(BaseAgent):

@@ -2,7 +2,7 @@ from __future__ import annotations
 import logging, re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger("val.soc")
 
@@ -41,6 +41,37 @@ IOC_PATTERNS = {
     "cve":    re.compile(r"CVE-\d{4}-\d+", re.I),
 }
 
+# New System Safety Modes
+class SafetyMode:
+    DEFENSIVE = "defensive"  # Only block, scan self, analyze logs
+    LAB = "lab"              # Internal pentest allowed (e.g. 192.168.* / 10.* / 127.0.0.1)
+    AUTHORIZED_PENTEST = "authorized_pentest" # Explicit target ranges allowed
+
+current_safety_mode = SafetyMode.DEFENSIVE
+authorized_targets = set()
+
+def set_safety_mode(mode: str, targets: Optional[List[str]] = None):
+    global current_safety_mode, authorized_targets
+    current_safety_mode = mode
+    if targets:
+        authorized_targets = set(targets)
+    logger.info(f"[SOC] Safety mode set to {mode.upper()}")
+
+
+def is_target_safe(target: str) -> bool:
+    """Enforces safety rules before running cyber tools."""
+    if current_safety_mode == SafetyMode.DEFENSIVE:
+        # Only allow localhost testing
+        return target in ("127.0.0.1", "localhost", "::1")
+        
+    if current_safety_mode == SafetyMode.LAB:
+        # Allow internal subnets
+        return any(target.startswith(prefix) for prefix in ("192.168.", "10.", "172.16.", "127."))
+        
+    if current_safety_mode == SafetyMode.AUTHORIZED_PENTEST:
+        return target in authorized_targets
+        
+    return False
 
 def scan_log_file(log_path: str = "app.log", tail_lines: int = 500) -> List[dict]:
     path = Path(log_path)

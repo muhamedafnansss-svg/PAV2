@@ -213,15 +213,18 @@ def build_config() -> AppConfig:
     )
 
     cfg = AppConfig(
-        val_version=os.getenv("VAL_VERSION", "1.0.0"),
-        session_name=os.getenv("VAL_SESSION", "val-session"),
+        val_version=os.getenv("VAL_VERSION", "14.1.0"),
+        session_name=os.getenv("VAL_SESSION", "jarvis-session"),
         api_host=os.getenv("VAL_API_HOST", "127.0.0.1"),
         api_port=int(os.getenv("VAL_API_PORT", "8765")),
         default_model=os.getenv("VAL_DEFAULT_MODEL", "qwen"),
         enable_telemetry=_bool_env("VAL_TELEMETRY", False),
         enable_background_agents=_bool_env("VAL_BACKGROUND_AGENTS", False),
-        max_total_memory_gb=float(os.getenv("VAL_MAX_MEMORY_GB", "10.0")),
-        force_tinyllama=_bool_env("VAL_FORCE_TINYLLAMA", False),    # default OFF -- Qwen is primary
+        max_total_memory_gb=float(os.getenv("VAL_MAX_MEMORY_GB", "14.0")), # Increased for 16GB RAM limit
+        cpu_usage_target=float(os.getenv("VAL_CPU_TARGET", "0.75")), # Explicit 75% CPU target
+        gpu_usage_target=float(os.getenv("VAL_GPU_TARGET", "0.90")), # Maximize 8GB VRAM
+        low_ram_mode=_bool_env("LOW_RAM_MODE", True), # Force aggressive memory optimization
+        force_tinyllama=_bool_env("VAL_FORCE_TINYLLAMA", False),    
         disable_streaming=_bool_env("VAL_DISABLE_STREAMING", False),
         models={
             "qwen": qwen_cfg,

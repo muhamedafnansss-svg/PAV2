@@ -160,7 +160,13 @@ class VoiceBridge:
         else:
             self._tts.speak(text)
 
-    def transcribe_bytes(self, audio_data: bytes, filename: str = "recording.webm") -> Optional[str]:
+    def detect_wake_word(self, transcript: str) -> bool:
+        """Checks if the wake word is present in the transcript."""
+        wake_words = ["hey jarvis", "jarvis", "commander"]
+        text_lower = transcript.lower()
+        return any(ww in text_lower for ww in wake_words)
+
+    def transcribe_bytes(self, audio_data: bytes, filename: str = "recording.webm", require_wake_word: bool = False) -> Optional[str]:
         """Transcribe audio bytes via Whisper. Saves to temp file, transcribes, cleans up."""
         if not self._stt.available:
             logger.warning("[Voice] STT not available for transcription")
@@ -173,6 +179,19 @@ class VoiceBridge:
             with open(tmp_path, "wb") as f:
                 f.write(audio_data)
             result = self._stt.transcribe(tmp_path)
+            
+            if not result:
+                return None
+                
+            if require_wake_word and not self.detect_wake_word(result):
+                logger.debug("[Voice] Wake word not detected. Ignoring audio.")
+                return None
+                
+            from val.security.voice_auth import voice_auth
+            if not voice_auth.verify_speaker(audio_data):
+                logger.warning("[Voice] Speaker verification failed. Audio rejected.")
+                return None
+                
             return result
         except Exception as e:
             logger.error("[Voice] Transcription error: %s", e)

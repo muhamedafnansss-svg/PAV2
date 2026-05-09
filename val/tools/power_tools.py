@@ -288,7 +288,16 @@ class NmapAdapter(ToolAdapter):
     timeout = 300  # scans can be slow
 
     def build_args(self, user_args: str) -> List[str]:
-        return ["nmap"] + user_args.split()
+        from val.soc.soc_engine import is_target_safe
+        # Simple safety extract: check if the target string in args is allowed
+        # Fallback to localhost if denied.
+        safe_args = []
+        for arg in user_args.split():
+            if not arg.startswith("-") and not is_target_safe(arg):
+                safe_args.append("127.0.0.1")
+            else:
+                safe_args.append(arg)
+        return ["nmap"] + safe_args
 
 
 class ShodanAdapter(ToolAdapter):

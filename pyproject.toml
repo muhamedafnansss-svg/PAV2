@@ -1,0 +1,10 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+# Default: only unit tests. Use: pytest -m integration  to run engine/agent tests.
+addopts = "-v --tb=short -m 'not integration'"
+markers = [
+    "integration: tests that load models or call inference (slow, require torch+GPU)",
+]

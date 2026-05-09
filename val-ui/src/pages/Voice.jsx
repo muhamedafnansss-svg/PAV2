@@ -176,7 +176,7 @@ export default function Voice() {
       // Add to transcript
       setTranscript(prev => [...prev, { role: 'user', text: userText }]);
 
-      // Send to VAL for response
+      // Send to JARVIS for response
       setVoiceState(STATE.THINKING);
       const valRes = await queryChat(userText);
       const valText = valRes.text || valRes.response || '';
@@ -277,7 +277,7 @@ export default function Voice() {
                   borderLeft: `3px solid ${msg.role === 'user' ? 'var(--cyan)' : 'var(--green)'}`,
                 }}>
                   <div style={{ fontSize: 9, color: msg.role === 'user' ? 'var(--cyan)' : 'var(--green)', fontFamily: 'var(--font-mono)', marginBottom: 4, textTransform: 'uppercase' }}>
-                    {msg.role === 'user' ? '🎙 You' : '◈ VAL'}
+                    {msg.role === 'user' ? '🎙 You' : '◈ JARVIS'}
                   </div>
                   {msg.text}
                 </div>
@@ -344,7 +344,7 @@ export default function Voice() {
             <textarea
               value={text}
               onChange={e => setText(e.target.value)}
-              placeholder="Enter text for VAL to speak..."
+              placeholder="Enter text for JARVIS to speak..."
               rows={4}
               style={{
                 background: 'var(--bg-elevated)', border: '1px solid var(--border-hi)',
@@ -370,9 +370,9 @@ export default function Voice() {
           <div className="card-title">Roadmap</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.8 }}>
             <div>◈ <strong style={{ color: 'var(--cyan)' }}>Current:</strong> pyttsx3 TTS + Whisper STT + Mic capture + Voice loop UI</div>
-            <div>◈ <strong style={{ color: 'var(--green)' }}>Ready:</strong> Microphone → Whisper → VAL (Qwen) → TTS output (full loop)</div>
+            <div>◈ <strong style={{ color: 'var(--green)' }}>Ready:</strong> Microphone → Whisper → JARVIS (Qwen) → TTS output (full loop)</div>
             <div>◈ <strong style={{ color: 'var(--text-muted)' }}>Planned:</strong> Coqui TTS for neural voices</div>
-            <div>◈ <strong style={{ color: 'var(--text-muted)' }}>Planned:</strong> Wake word detection ("Hey VAL")</div>
+            <div>◈ <strong style={{ color: 'var(--text-muted)' }}>Planned:</strong> Wake word detection ("Hey JARVIS")</div>
           </div>
         </div>
       </div>

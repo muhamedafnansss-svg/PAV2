@@ -5,7 +5,7 @@ import { runTerminal } from '../api/client';
 
 const ALLOWED = ['ls', 'dir', 'pwd', 'whoami', 'date', 'uptime', 'df', 'free', 'ps', 'echo', 'top', 'uname', 'hostname', 'ipconfig', 'ifconfig'];
 
-const QUICK_CMDS = ['whoami', 'pwd', 'hostname', 'date', 'dir', 'ipconfig', 'echo Hello from VAL'];
+const QUICK_CMDS = ['whoami', 'pwd', 'hostname', 'date', 'dir', 'ipconfig', 'echo Hello from JARVIS'];
 
 export default function Tools() {
   const [cmd, setCmd]         = useState('');
@@ -44,7 +44,7 @@ export default function Tools() {
                   <div className="terminal-dot td-y" />
                   <div className="terminal-dot td-g" />
                 </div>
-                <span className="terminal-title">VAL Safe Shell — Allowlisted Commands Only</span>
+                <span className="terminal-title">JARVIS Safe Shell — Allowlisted Commands Only</span>
               </div>
               <div className="terminal-body">
                 {history.length === 0 && <span style={{ color: 'var(--text-dim)' }}>$ ready</span>}

@@ -1,9 +1,9 @@
 """
-VAL Memory System — 3-Layer Production Memory
+VAL Memory System — Persistent Production Memory
 ===============================================
 Three distinct layers with strict boundaries:
 
-  Layer 1 — Short-term memory
+  Layer 1 — Short-term memory (SQLite Persistent)
     - Last 8–10 conversation turns
     - Oldest turns discarded (no summarization)
     - Injected into every LLM prompt
@@ -30,6 +30,9 @@ from __future__ import annotations
 import time
 import threading
 import logging
+import sqlite3
+import os
+import json
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 
@@ -40,7 +43,7 @@ logger = logging.getLogger("val.memory")
 MAX_TURNS       = 10        # short-term window (8–10 turns as specified)
 WORKING_TTL_S   = 300.0     # 5 minutes: auto-clear stale working memory
 MAX_CTX_CHARS   = 3000      # max chars to inject into prompt context
-
+DB_PATH         = "val_memory.sqlite3"
 
 # ─── Turn ─────────────────────────────────────────────────────────────────────
 
@@ -90,7 +93,7 @@ class WorkingState:
 
 class ConversationMemory:
     """
-    Per-session memory object.
+    Per-session memory object backed by SQLite.
 
     Short-term:
         memory.add_turn(role, content, model)
@@ -105,24 +108,60 @@ class ConversationMemory:
 
     def __init__(self, session_id: str):
         self.session_id  = session_id
-        self._turns:     List[Turn] = []
         self._working:   Optional[WorkingState] = None
         self._lock       = threading.RLock()
         self._created_at = time.time()
+        self._init_db()
+
+    def _init_db(self):
+        with self._lock:
+            with sqlite3.connect(DB_PATH) as conn:
+                conn.execute("""
+                    CREATE TABLE IF NOT EXISTS memory_turns (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        session_id TEXT NOT NULL,
+                        role TEXT NOT NULL,
+                        content TEXT NOT NULL,
+                        model TEXT,
+                        timestamp REAL NOT NULL
+                    )
+                """)
+                conn.execute("CREATE INDEX IF NOT EXISTS idx_session ON memory_turns(session_id, timestamp)")
+                conn.commit()
+
+    def _get_turns(self) -> List[Turn]:
+        with self._lock:
+            with sqlite3.connect(DB_PATH) as conn:
+                cursor = conn.execute(
+                    "SELECT role, content, model, timestamp FROM memory_turns WHERE session_id = ? ORDER BY timestamp ASC",
+                    (self.session_id,)
+                )
+                return [Turn(role=row[0], content=row[1], model=row[2], timestamp=row[3]) for row in cursor.fetchall()]
 
     # ── Short-term ────────────────────────────────────────────────────────────
 
     def add_turn(self, role: str, content: str, model: Optional[str] = None) -> None:
         """
-        Add a turn to short-term memory.
+        Add a turn to short-term SQLite memory.
         Enforces MAX_TURNS by discarding oldest pair if exceeded.
         """
         with self._lock:
-            self._turns.append(Turn(role=role, content=content, model=model))
-            # Discard oldest entries to stay within MAX_TURNS
-            # Always remove in pairs (user + assistant) to maintain turn coherence
-            while len(self._turns) > MAX_TURNS:
-                self._turns.pop(0)
+            with sqlite3.connect(DB_PATH) as conn:
+                conn.execute(
+                    "INSERT INTO memory_turns (session_id, role, content, model, timestamp) VALUES (?, ?, ?, ?, ?)",
+                    (self.session_id, role, content, model, time.time())
+                )
+                conn.commit()
+                
+            turns = self._get_turns()
+            if len(turns) > MAX_TURNS:
+                # Keep only the latest MAX_TURNS
+                with sqlite3.connect(DB_PATH) as conn:
+                    conn.execute(
+                        "DELETE FROM memory_turns WHERE session_id = ? AND id NOT IN (SELECT id FROM memory_turns WHERE session_id = ? ORDER BY timestamp DESC LIMIT ?)",
+                        (self.session_id, self.session_id, MAX_TURNS)
+                    )
+                    conn.commit()
 
     def get_context(self, max_chars: int = MAX_CTX_CHARS) -> List[dict]:
         """
@@ -130,8 +169,7 @@ class ConversationMemory:
         Respects max_chars budget — drops oldest turns first if over budget.
         Returns [{role, content}, ...] oldest-first.
         """
-        with self._lock:
-            turns = list(self._turns)
+        turns = self._get_turns()
 
         if not turns:
             return []
@@ -149,14 +187,15 @@ class ConversationMemory:
         return [t.as_dict() for t in selected]
 
     def clear(self) -> None:
-        """Clear all short-term turns."""
+        """Clear all short-term turns for this session."""
         with self._lock:
-            self._turns.clear()
+            with sqlite3.connect(DB_PATH) as conn:
+                conn.execute("DELETE FROM memory_turns WHERE session_id = ?", (self.session_id,))
+                conn.commit()
         logger.debug("[Memory:%s] Short-term cleared", self.session_id)
 
     def turn_count(self) -> int:
-        with self._lock:
-            return len(self._turns)
+        return len(self._get_turns())
 
     # ── Working memory ────────────────────────────────────────────────────────
 

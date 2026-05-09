@@ -13,6 +13,7 @@ import Models       from './pages/Models';
 import Memory       from './pages/Memory';
 import Settings     from './pages/Settings';
 import DualPanel    from './pages/DualPanel';
+import VoiceOrb     from './components/VoiceOrb';
 import useValStore  from './store';
 
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
           </Routes>
         </main>
         <SystemPanel />
+        <VoiceOrb />
       </div>
     </BrowserRouter>
   );

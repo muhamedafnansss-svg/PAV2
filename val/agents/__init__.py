@@ -8,3 +8,5 @@ __all__ = [
     "BaseAgent", "VALCoreAgent", "TaskAgent", "BackgroundAgent",
     "AgentOrchestrator", "AgentStatus", "get_orchestrator",
 ]
+
+from .specialists import JarvisCoreAgent, CyberAgent, DevAgent

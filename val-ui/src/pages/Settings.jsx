@@ -61,7 +61,7 @@ export default function Settings() {
           <div className="settings-row">
             <div>
               <div className="settings-label">API Endpoint</div>
-              <div className="settings-desc">VAL backend server address</div>
+              <div className="settings-desc">JARVIS backend server address</div>
             </div>
             <input
               value={settings.apiBase}
@@ -85,7 +85,7 @@ export default function Settings() {
         <div className="settings-group">
           <div className="settings-group-title">Platform Info</div>
           {[
-            { label: 'VAL Version',   val: '9.0.0' },
+            { label: 'JARVIS Version',   val: '9.0.0' },
             { label: 'Model',         val: 'Qwen2.5-Coder-7B-Instruct' },
             { label: 'Backend',       val: 'FastAPI + Uvicorn' },
             { label: 'Frontend',      val: 'React 19 + Vite + Zustand + Framer Motion' },

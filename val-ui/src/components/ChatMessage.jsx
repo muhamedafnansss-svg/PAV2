@@ -145,7 +145,7 @@ export default function ChatMessage({ message }) {
       <div className="msg-body">
         <div className="msg-meta">
           <span className={`msg-sender ${isAI ? 'ai' : 'user'}`}>
-            {isAI ? 'VAL' : 'YOU'}
+            {isAI ? 'JARVIS' : 'YOU'}
           </span>
           {message.timestamp && (
             <span className="msg-time">{formatTime(message.timestamp)}</span>
@@ -197,7 +197,7 @@ export function TypingIndicator() {
       <div className="msg-avatar ai">◈</div>
       <div className="msg-body">
         <div className="msg-meta">
-          <span className="msg-sender ai">VAL</span>
+          <span className="msg-sender ai">JARVIS</span>
           <span className="model-tag qwen">PROCESSING</span>
         </div>
         <div className="msg-bubble">

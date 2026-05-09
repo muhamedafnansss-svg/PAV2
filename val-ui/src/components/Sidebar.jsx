@@ -57,7 +57,7 @@ export default function Sidebar() {
       transition={{ duration: 0.3 }}
     >
       <div className="sidebar-logo">
-        <div className="logo-title">VAL</div>
+        <div className="logo-title">JARVIS</div>
         <div className="logo-sub">Virtual Autonomous Logic</div>
       </div>
 

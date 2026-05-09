@@ -189,11 +189,11 @@ export default function Chat() {
               className="welcome-screen"
             >
               <div className="welcome-glyph">◈</div>
-              <div className="welcome-title">VAL ONLINE</div>
+              <div className="welcome-title">JARVIS ONLINE</div>
               <div className="welcome-sub">
                 {online
                   ? `${(activeModel || 'Model').toUpperCase()} ready — ${securityMode} Mode`
-                  : 'Connecting to VAL API…'}
+                  : 'Connecting to JARVIS API…'}
               </div>
               <div className="hint-grid">
                 {SUGGESTED.map((s, i) => (

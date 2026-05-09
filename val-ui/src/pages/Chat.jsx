@@ -147,7 +147,7 @@ export default function Chat() {
   return (
     <div className="chat-layout">
       <Header
-        title="OPERATOR CONSOLE"
+        title="J.A.R.V.I.S. TERMINAL"
         icon="◈"
         sub={`${(activeModel || 'MODEL').toUpperCase()} · ${online ? 'ONLINE' : 'OFFLINE'}`}
         right={
@@ -189,7 +189,7 @@ export default function Chat() {
               className="welcome-screen"
             >
               <div className="welcome-glyph">◈</div>
-              <div className="welcome-title">VAL ONLINE</div>
+              <div className="welcome-title">J.A.R.V.I.S. ONLINE</div>
               <div className="welcome-sub">
                 {online
                   ? `${(activeModel || 'Model').toUpperCase()} ready — ${securityMode} Mode`

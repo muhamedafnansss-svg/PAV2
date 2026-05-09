@@ -37,28 +37,17 @@ _REPLACEMENTS = [
 
 _JARVIS_GREETINGS = {
     "formal": [
-        "Good {time_of_day}, sir. How may I assist you?",
-        "At your service. What do you need?",
-        "Systems nominal. Standing by for your command.",
-    ],
-    "tactical": [
-        "Online. Ready for tasking.",
-        "Systems green. Awaiting orders.",
-        "Operational. What's the mission?",
-    ],
-    "friendly": [
-        "Hey! Good {time_of_day}. What can I do for you?",
-        "Hey there. What's on your mind?",
-        "Ready when you are. What do you need?",
+        "Good {time_of_day}, sir. J.A.R.V.I.S. online and ready.",
+        "At your service, sir. All systems nominal.",
+        "Online and awaiting your command, sir.",
+        "Good {time_of_day}. How may I be of assistance today?",
     ],
 }
 
 # ─── JARVIS-style acknowledgements ───────────────────────────────────────────
 
 _JARVIS_ACK = {
-    "formal": ["Understood.", "Acknowledged.", "Very well.", "Proceeding."],
-    "tactical": ["Copy.", "Roger.", "Executing.", "On it."],
-    "friendly": ["Got it!", "Sure thing.", "On it.", "No problem."],
+    "formal": ["Understood, sir.", "Right away, sir.", "Processing.", "Executing now."],
 }
 
 # ─── Persona Transformer ─────────────────────────────────────────────────────

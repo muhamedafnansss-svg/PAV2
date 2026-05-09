@@ -11,12 +11,12 @@ const VSTATE = {
 };
 
 const STATE_CFG = {
-  [VSTATE.IDLE]:         { color: '#4a6080', glow: 'none',                          icon: '◎', label: 'Ready' },
-  [VSTATE.LISTENING]:    { color: '#ff3b6b', glow: '0 0 30px #ff3b6b88',            icon: '●', label: 'Listening...' },
-  [VSTATE.TRANSCRIBING]: { color: '#ffb800', glow: '0 0 20px #ffb80066',            icon: '◎', label: 'Transcribing...' },
-  [VSTATE.PROCESSING]:   { color: '#00d4ff', glow: '0 0 30px #00d4ff66',            icon: '◈', label: 'Processing...' },
-  [VSTATE.SPEAKING]:     { color: '#00ff8c', glow: '0 0 30px #00ff8c66',            icon: '◉', label: 'Speaking...' },
-  [VSTATE.LOCKED]:       { color: '#ff3b6b', glow: '0 0 20px #ff3b6b44',            icon: '⊘', label: 'Locked' },
+  [VSTATE.IDLE]:         { color: 'rgba(0, 212, 255, 0.4)', glow: 'none',                          icon: '◎', label: 'Ready' },
+  [VSTATE.LISTENING]:    { color: 'var(--red)', glow: '0 0 30px #ff3b6b88',            icon: '●', label: 'Listening...' },
+  [VSTATE.TRANSCRIBING]: { color: 'var(--cyan)', glow: '0 0 20px #ffb80066',            icon: '◎', label: 'Transcribing...' },
+  [VSTATE.PROCESSING]:   { color: 'var(--cyan)', glow: '0 0 30px #00d4ff66',            icon: '◈', label: 'Processing...' },
+  [VSTATE.SPEAKING]:     { color: 'var(--cyan)', glow: '0 0 30px #00ff8c66',            icon: '◉', label: 'Speaking...' },
+  [VSTATE.LOCKED]:       { color: 'var(--red)', glow: '0 0 20px #ff3b6b44',            icon: '⊘', label: 'Locked' },
 };
 
 export default function VoiceOrb() {

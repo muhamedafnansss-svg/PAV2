@@ -14,6 +14,7 @@ import Memory       from './pages/Memory';
 import Settings     from './pages/Settings';
 import DualPanel    from './pages/DualPanel';
 import VoiceOrb     from './components/VoiceOrb';
+import SystemHUD    from './components/SystemHUD';
 import useValStore  from './store';
 
 export default function App() {
@@ -47,6 +48,7 @@ export default function App() {
         </main>
         <SystemPanel />
         <VoiceOrb />
+        <SystemHUD />
       </div>
     </BrowserRouter>
   );

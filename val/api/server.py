@@ -814,11 +814,14 @@ def _preload_model():
 
 
 def start_api_server(host: str = "127.0.0.1", port: int = 8765) -> None:
+    # HARDENED: Force localhost binding to prevent external network access to the API
+    forced_host = "127.0.0.1"
+    
     if not _OK:
-        print("[VAL] pip install fastapi uvicorn pydantic")
+        print("[JARVIS] pip install fastapi uvicorn pydantic")
         return
     app = build_app()
-    print(f"\n[VAL] API v14.0 - Operator Console")
-    print(f"[VAL] Server -> http://{host}:{port}")
-    print(f"[VAL] Docs   -> http://{host}:{port}/docs\n")
-    uvicorn.run(app, host=host, port=port, log_level="warning")
+    print(f"\n[JARVIS] Core AI Executive Assistant API")
+    print(f"[JARVIS] Server securely bound to -> http://{forced_host}:{port}")
+    print(f"[JARVIS] Docs   -> http://{forced_host}:{port}/docs\n")
+    uvicorn.run(app, host=forced_host, port=port, log_level="warning")

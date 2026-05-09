@@ -28,7 +28,7 @@ logger = logging.getLogger("val.voice")
 class STTEngine:
     """Speech-to-Text engine using Whisper."""
 
-    def __init__(self, model_size: str = "base"):
+    def __init__(self, model_size: str = "tiny.en"):  # Optimized for speed
         self._model_size = model_size
         self._model = None
         self._available = False
@@ -39,8 +39,10 @@ class STTEngine:
             return self._available
         self._init_attempted = True
         try:
-            import whisper
-            self._model = whisper.load_model(self._model_size)
+            # Using faster-whisper instead of standard whisper for 4x speedup
+            from faster_whisper import WhisperModel
+            # Loading in int8 compute type to minimize RAM overhead
+            self._model = WhisperModel(self._model_size, device="cpu", compute_type="int8")
             self._available = True
             logger.info("[STT] Whisper loaded: %s", self._model_size)
         except ImportError:
@@ -55,8 +57,9 @@ class STTEngine:
         if not self._try_init():
             return None
         try:
-            result = self._model.transcribe(audio_file, language="en")
-            return result.get("text", "").strip()
+            # faster-whisper returns an iterator of segments
+            segments, info = self._model.transcribe(audio_file, beam_size=1, language="en")
+            return " ".join([segment.text for segment in segments]).strip()
         except Exception as e:
             logger.error("[STT] Transcription error: %s", e)
             return None

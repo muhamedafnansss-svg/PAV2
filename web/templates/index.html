@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genos - AI Voice Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Genos</h1>
+            <p>Personal AI Voice Assistant</p>
+        </header>
+        
+        <div class="main-content">
+            <section class="status-section">
+                <h2>Status</h2>
+                <div class="status-display">
+                    <p>State: <span id="state">IDLE</span></p>
+                    <p>Model: <span id="model">Loading...</span></p>
+                    <p>Listening: <span id="listening">No</span></p>
+                </div>
+            </section>
+            
+            <section class="control-section">
+                <h2>Controls</h2>
+                <button id="startBtn" class="btn btn-primary">Start</button>
+                <button id="stopBtn" class="btn btn-secondary">Stop</button>
+            </section>
+            
+            <section class="model-section">
+                <h2>AI Models</h2>
+                <select id="modelSelect" class="model-select">
+                    <option>Loading models...</option>
+                </select>
+                <button id="switchBtn" class="btn btn-primary">Switch Model</button>
+            </section>
+            
+            <section class="input-section">
+                <h2>Send Message</h2>
+                <textarea id="messageInput" placeholder="Type your message..."></textarea>
+                <button id="sendBtn" class="btn btn-primary">Send</button>
+            </section>
+            
+            <section class="chat-section">
+                <h2>Chat History</h2>
+                <div id="chatHistory" class="chat-history"></div>
+            </section>
+        </div>
+    </div>
+    
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

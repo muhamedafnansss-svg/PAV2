@@ -1,57 +1,11 @@
-# VAL — Secrets & Environment
-.env
-*.env.local
-
-# Python
+.gitignore
+*.pyc
 __pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.Python
-*.egg
-*.egg-info/
-dist/
-build/
-eggs/
-parts/
-var/
-sdist/
-develop-eggs/
-.installed.cfg
-lib/
-lib64/
-*.so
-
-# Virtual Environments
-.venv/
 venv/
-env/
-ENV/
-
-# VAL Runtime
-val/logs/*.jsonl
-val/state/store/
-val/state/memdir/
-*.jsonl
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-*.xml
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
+*.egg-info/
+.env
+models/*.pkl
+models/*.json
+models/*.sqlite
+logs/*.log
 .DS_Store
-Thumbs.db
-desktop.ini
-
-# Archive & Models (large)
-ARCHIVE/
-models/
-node_modules/
